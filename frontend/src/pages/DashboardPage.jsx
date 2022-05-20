@@ -17,6 +17,13 @@ export default function DashboardPage() {
         }
     }, [user, navigate])
 
+    if (user === null) {
+        return (
+            <div className='notification is-info is-light'>
+                Its not you its us. We are working on it!
+            </div>
+        )
+    }
 
     if (user.role === 1) {
         return <AdminDashboard />
@@ -25,7 +32,5 @@ export default function DashboardPage() {
     if (user.role === 2) {
         return <MemberDashboard />
     }
-    return (
-        <div>DashboardPage</div>
-    )
+
 }

@@ -105,11 +105,11 @@ const getAttendanceDetails = asyncHandler(async (req, res) => {
 
             } else {
                 // check if the check_in date is today
-                // if yes mark status as 'yet to checkout' --> y
+                // if yes mark status as 'yet to checkout' --> yo
                 // else mark status as 'regularize' --> r
                 let check_in = moment(checkedIn.check_in).format("YYYY-MM-DD")
                 if (moment(check_in).isSame(moment().format("YYYY-MM-DD"))) {
-                    userStatus.status = 'y'
+                    userStatus.status = 'yo'
                     userStatus.check_in = checkedIn.check_in
                 } else {
                     userStatus.status = 'r'
@@ -155,12 +155,18 @@ const getAttendanceDetails = asyncHandler(async (req, res) => {
                 currDateAttendance.extendedProps.joined_on = true;
             }
         }
-
-        // check whether user forgot to swipe/absent on joining date 
         else {
-            // absent
-            userStatus.status = 'a' // a --> absent
-            currDateAttendance.extendedProps = userStatus
+
+            if (moment(currDate).isSame(moment().format("YYYY-MM-DD"))) {
+                userStatus.status = 'yi' // yet to checkin
+                currDateAttendance.extendedProps = userStatus
+            } else {
+                // absent
+                userStatus.status = 'a' // a --> absent
+                currDateAttendance.extendedProps = userStatus
+
+            }
+
 
             if (moment(currDate).isSame(userJoinedOn)) {
                 currDateAttendance.extendedProps.joined_on = true;

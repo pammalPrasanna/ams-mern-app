@@ -11,10 +11,6 @@ const userSchema = mongoose.Schema({
         required: [true, 'Please add email'],
         unique: true
     },
-    email: {
-        type: String,
-        required: [true, 'Please add email']
-    },
     role: {
         type: Number,
     },

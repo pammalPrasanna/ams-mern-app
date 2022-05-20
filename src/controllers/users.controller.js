@@ -7,6 +7,8 @@ const { generateToken } = require('../utils/auth.util');
 // @route   POST /api/users
 // @access  Public
 const registerUser = asyncHandler(async (req, res) => {
+    res.status(500)
+
     const { name, email, password } = req.body;
     if (!name || !email || !password) {
         res.status(400);
@@ -27,17 +29,19 @@ const registerUser = asyncHandler(async (req, res) => {
 
     // Create user
     const user = await User.create({
-        name,
-        email,
+        name: name,
+        email: email,
+        role: 1,
         password: hashedPassword,
-        role: 1
     });
+
 
     if (user) {
         res.status(201).json({
             name: user.name,
             email: user.email,
             id: user._id,
+            role: user.role,
             token: generateToken(user.id)
         })
     } else {

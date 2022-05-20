@@ -4,10 +4,8 @@ import axios from 'axios';
 
 export const registerUser = createAsyncThunk('auth/registerUser', async (params, thunkAPI) => {
     try {
-        // const { data } = await axios.post(process.env.REACT_APP_BASE_URI + 'api/users/', params)
         const { data } = await axios.post('api/users/', params)
 
-        localStorage.setItem('user', JSON.stringify(data))
 
         return data
     } catch (error) {
@@ -23,8 +21,7 @@ export const loginUser = createAsyncThunk('auth/loginUser', async (params, thunk
     try {
         const { data } = await axios.post('api/users/login', params)
 
-        localStorage.setItem('user', JSON.stringify(data))
-        thunkAPI.dispatch(setUserState(data))
+        // thunkAPI.dispatch(setUserState(data))
 
         return data
     } catch (error) {
@@ -53,6 +50,11 @@ const initialUserState = {
     isLoading: false,
     isError: false,
     message: "",
+
+    isRegisterUserRejected: false,
+    isRegisterUserPending: false,
+    isRegisterUserErrorMsg: "",
+    isRegisterUserFulfilled: false,
 
     isLoginUserPending: false,
     isLoginUserRejected: false,
@@ -84,16 +86,25 @@ const authSlice = createSlice({
     extraReducers: {
         // Reducers to handle registration promises
         [registerUser.pending]: (state) => {
-            state.isLoading = true
+            state.isRegisterUserPending = true
+            state.isRegisterUserRejected = false
+            state.isRegisterUserErrorMsg = ""
+            state.isRegisterUserFulfilled = false
+
         },
         [registerUser.fulfilled]: (state, action) => {
+            state.isRegisterUserFulfilled = true
             state.user = action.payload
-            state.isLoading = false
+            localStorage.setItem('user', JSON.stringify(action.payload))
+            state.isRegisterUserPending = false
+            state.isRegisterUserRejected = false
+            state.isRegisterUserErrorMsg = ""
+
         },
         [registerUser.rejected]: (state, action) => {
-            state.isLoading = false
-            state.message = action.payload
-            state.isError = true
+            state.isRegisterUserErrorMsg = action.payload
+            state.isRegisterUserPending = false
+            state.isRegisterUserRejected = true
         },
 
         // Reducers to handle login promises
@@ -106,6 +117,8 @@ const authSlice = createSlice({
         [loginUser.fulfilled]: (state, action) => {
             state.isLoginUserPending = false
             state.isLoginUserFulfilled = true
+            localStorage.setItem('user', JSON.stringify(action.payload))
+
             state.user = action.payload
 
         },

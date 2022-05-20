@@ -32,9 +32,7 @@ const registerMember = asyncHandler(async (req, res) => {
     const salt = await bcrypt.genSalt(12);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    let joined_on = moment.tz(moment(), "Asia/Kolkata");
-    joined_on = joined_on.format("YYYY-DD-MM");
-
+    let joined_on = moment().tz("Asia/Kolkata");
     const updatedUser = await User
         .findByIdAndUpdate(
             id,

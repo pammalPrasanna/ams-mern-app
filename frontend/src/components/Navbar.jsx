@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom"
+import { Link, useLocation } from "react-router-dom"
 import { MdEditCalendar } from 'react-icons/md'
 import LoginSignUpButtons from './Buttons/LoginSignUpButtons'
 import { useSelector } from "react-redux"
@@ -6,6 +6,7 @@ import SwipeButtons from "./Buttons/SwipeButtons"
 
 const Navbar = () => {
     const { user } = useSelector((store) => store.auth);
+    const location = useLocation();
 
     return (
         <>
@@ -24,7 +25,11 @@ const Navbar = () => {
                         <div className="navbar-item">
                             <div className="buttons">
                                 {user ? (user.role === 2 ? (<SwipeButtons />) : "") : ""}
-                                <LoginSignUpButtons />
+
+                                {
+                                    location.pathname.includes('member-registration') ? "" :
+                                        <LoginSignUpButtons />
+                                }
 
                             </div>
                         </div>

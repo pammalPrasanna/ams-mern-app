@@ -1,10 +1,9 @@
 import React, { useState } from 'react'
-import FullCalendar from '@fullcalendar/react' // must go before plugins
-
-import dayGridPlugin from '@fullcalendar/daygrid' // a plugin!
+import FullCalendar from '@fullcalendar/react'
+import dayGridPlugin from '@fullcalendar/daygrid'
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect } from 'react'
-import { MdDone, MdEventAvailable, MdEventBusy } from 'react-icons/md'
+import { MdDone, MdEventAvailable, MdEventBusy, MdCalendarToday } from 'react-icons/md'
 import { getAttendance } from '../../features/swipe/swipeSlice'
 import moment from 'moment';
 
@@ -103,22 +102,31 @@ function renderEventContent(eventInfo) {
 
     if (status === 'p') {
         return (<>
-            <div className='has-background-success'><MdEventAvailable size={25} />{hours_clocked}</div>
+            <div className='has-background-success'><MdEventAvailable size={25} className="pr-2" />{hours_clocked}</div>
             {joined_on ? (<div className='pl-2 has-background-link'>Joined on</div>) : ""}
         </>)
     }
 
-    if (status === 'y') {
+    if (status === 'yo') {
         return (<>
-            <div className='has-background-info'><MdDone size={25} /><span>yet to swipe out</span></div>
+            <div className='has-background-info'><MdDone size={25} className="pr-2" /><span>yet to swipe out</span></div>
             {joined_on ? (<div className='pl-2 has-background-link'>Joined on</div>) : ""}
 
         </>)
     }
+
+    if (status === 'yi') {
+        return (<>
+            <div className='has-background-info'><MdCalendarToday size={25} className="pr-2" /><span>yet to swipe in</span></div>
+            {joined_on ? (<div className='pl-2 has-background-link'>Joined on</div>) : ""}
+
+        </>)
+    }
+
 
     if (status === 'r') {
         return (<>
-            <div className='has-background-warning has-text-link'><MdDone size={25} />regularize</div>
+            <div className='has-background-warning has-text-link'><MdDone size={25} className="pr-2" />regularize</div>
             {joined_on ? (<div className='pl-2 has-background-link'>Joined on</div>) : ""}
 
         </>)
@@ -126,7 +134,7 @@ function renderEventContent(eventInfo) {
 
     if (status === 'a') {
         return (<>
-            <div className='has-background-danger'><MdEventBusy size={25} className="my-0 py-0" />Absent</div>
+            <div className='has-background-danger'><MdEventBusy size={25} className="my-0 py-0 pr-2" />Absent</div>
             {joined_on ? (<div className='pl-2 has-background-link'>Joined on</div>) : ""}
 
         </>)

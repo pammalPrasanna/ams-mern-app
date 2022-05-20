@@ -1,30 +1,52 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { getMembers, deleteMember } from "../features/members/membersSlice";
 import { MdAdd, MdDelete } from "react-icons/md";
 import AddMemberModal from "../components/Modals/AddMemberModal";
 import ErrorCard from "../components/Cards/ErrorCard";
 import ProfileCard from "../components/Cards/ProfileCard";
+
+
 const MembersTab = () => {
 
     const dispatch = useDispatch();
     const { id } = useParams();
+    const navigate = useNavigate();
+    const { user } = useSelector((store) => store.auth);
 
-    const { members, isLoading, isError } = useSelector((store) => store.members);
+    const {
+        members,
+        isLoading,
+        isError,
+        isGetMembersPending,
+        isGetMembersRejected,
+        isGetMembersFulfilled,
+        isGetMembersErrorMsg,
+
+    } = useSelector((store) => store.members);
 
     const [addMember, setAddMember] = useState(false);
 
     const [profileView, setProfileView] = useState({});
 
     useEffect(() => {
+        if (!user) {
+            navigate('/login')
+        }
         dispatch(getMembers(id))
     }, [])
 
-    if (isLoading) {
+    if (isGetMembersPending || isLoading) {
         return (<><h1>Loading...</h1></>)
     }
-
+    if (isGetMembersRejected) {
+        return (<>
+            <div className="notification is-info is-light">
+                {isGetMembersErrorMsg}
+            </div>
+        </>)
+    }
     if (isError) {
         return (<ErrorCard tryAgainMethod={getMembers} />)
     }

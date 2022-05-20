@@ -30,14 +30,11 @@ export default function AdminDashboard() {
             navigate('/500')
         }
         if (isError) {
-            console.log(message);
-
             dispatch(resetOrgsStore())
         }
         if (!user) {
             navigate('/login')
         }
-        console.log('ie', isInternalError)
     }, [user, navigate, isError, message, dispatch])
 
 

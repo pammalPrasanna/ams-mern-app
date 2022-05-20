@@ -56,8 +56,8 @@ function AddOrgModal({ isActive, setAddOrg }) {
                             <label className="label">Organization name</label>
                             <div className={`control ${isLoading ? 'is-loading' : ''}`}>
                                 <input className="input" name="name" onChange={onChange} type="text" placeholder="eg. My Organization" />
+                                {name === "" ? <p className="help is-danger">This field is required</p> : ""}
                             </div>
-                            {name === "" ? <p className="help is-danger">This field is required</p> : ""}
                         </div>
 
                         <div align="right">

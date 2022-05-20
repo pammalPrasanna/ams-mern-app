@@ -1,5 +1,4 @@
 const ProfileCard = ({ mid }) => {
-    console.log(window.location.href)
     return (
         <>
 

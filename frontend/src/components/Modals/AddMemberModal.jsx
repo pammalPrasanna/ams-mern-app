@@ -56,14 +56,14 @@ const AddMemberModal = ({ isActive, setAddMember }) => {
                         <div className="field">
                             <label className="label">Name</label>
                             <div className={`control ${isAddMemberPending ? 'is-loading' : ''}`}>
-                                <input className="input" name="name" onChange={onChange} type="text" placeholder="eg. My Organization" />
+                                <input className="input" name="name" onChange={onChange} type="text" placeholder="eg. John Doe" />
                             </div>
                             {name === "" ? <p className="help is-danger">This field is required</p> : ""}
                         </div>
                         <div className="field">
                             <label className="label">Email</label>
                             <div className={`control ${isAddMemberPending ? 'is-loading' : ''}`}>
-                                <input className="input" name="email" onChange={onChange} type="email" placeholder="eg. name@email.com" />
+                                <input className="input" name="email" onChange={onChange} type="email" placeholder="eg. john@email.com" />
                             </div>
                             {email === "" ? <p className="help is-danger">This field is required</p> : ""}
                         </div>

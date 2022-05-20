@@ -51,7 +51,6 @@ const MemberRegistrationPage = () => {
                 password
             }));
         }
-        console.log(formData)
     }
 
 
@@ -123,7 +122,9 @@ const MemberRegistrationPage = () => {
                                     </div>) : ""
                                 }
                                 <div className="control mt-2">
-                                    <button className={`button is-link is-fullwidth ${isRegisterMemberPending ? 'is-loading' : ''}`} disabled={((email.length > 0 && password.length > 0 && password2.length > 0) ? false : true)} type="submit">Register</button>
+                                    <button
+                                        className={`button is-link is-fullwidth ${isRegisterMemberPending ? 'is-loading' : ''}`}
+                                        disabled={((email.length && password.length && password2.length && (password === password2)) ? false : true)} type="submit">Register</button>
                                 </div>
                             </form>
                         </div>

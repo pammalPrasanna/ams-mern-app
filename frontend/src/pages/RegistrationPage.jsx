@@ -18,21 +18,19 @@ const RegistrationPage = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
 
-    const { user, isLoading, isError, isSuccess, message } = useSelector(
-        (state) => state.auth
-    )
+    const {
+        user,
+        isRegisterUserErrorMsg,
+        isRegisterUserPending,
+        isRegisterUserRejected,
+        isRegisterUserFulfilled
+    } = useSelector((state) => state.auth)
 
     useEffect(() => {
-        if (isError) {
-            toast.error(message)
-        }
-
-        if (isSuccess || user) {
+        if (user || isRegisterUserFulfilled) {
             navigate('/dashboard')
         }
-
-        dispatch(resetUserState())
-    }, [user, isError, isSuccess, message, navigate, dispatch])
+    }, [user, isRegisterUserFulfilled])
 
     const onChange = (e) => {
         setFormData((prevState) => ({
@@ -43,25 +41,13 @@ const RegistrationPage = () => {
 
     const onSubmit = (e) => {
         e.preventDefault()
-        if (!name || !email || !password || !password2) {
-            toast.error('Fields cannot be empty')
-
+        const userData = {
+            name,
+            email,
+            password,
         }
-        else if (password !== password2) {
-            toast.error('Passwords do not match')
-        } else {
-            const userData = {
-                name,
-                email,
-                password,
-            }
+        dispatch(registerUser(userData))
 
-            dispatch(registerUser(userData))
-        }
-    }
-
-    if (isLoading) {
-        return <><h1>Loading...</h1></>
     }
 
     return (
@@ -76,6 +62,8 @@ const RegistrationPage = () => {
                                 <label className="label">Name</label>
                                 <div className="control">
                                     <input className="input" name="name" onChange={onChange} type="text" placeholder="e.g Alex Smith" />
+                                    {name === "" ? <p className="help is-danger">This field is required</p> : ""}
+
                                 </div>
                             </div>
 
@@ -83,6 +71,8 @@ const RegistrationPage = () => {
                                 <label className="label">Email</label>
                                 <div className="control">
                                     <input className="input" name="email" onChange={onChange} type="email" placeholder="e.g. alexsmith@gmail.com" />
+                                    {email === "" ? <p className="help is-danger">This field is required</p> : ""}
+
                                 </div>
                             </div>
 
@@ -90,6 +80,8 @@ const RegistrationPage = () => {
                                 <label className="label">Password</label>
                                 <div className="control">
                                     <input className="input" name="password" onChange={onChange} type="password" />
+                                    {password === "" ? <p className="help is-danger">This field is required</p> : ""}
+
                                 </div>
                             </div>
 
@@ -97,10 +89,21 @@ const RegistrationPage = () => {
                                 <label className="label">Re enter Password</label>
                                 <div className="control">
                                     <input className="input" name="password2" onChange={onChange} type="password" />
+                                    {password2 === "" ? <p className="help is-danger">This field is required</p> : ""}
+                                    {password2 !== password ? <p className="help is-danger">Passwords doesn't match</p> : ""}
+
                                 </div>
                             </div>
+                            {isRegisterUserRejected ? (<><div className="notification is-danger is-light">
+                                {isRegisterUserErrorMsg}
+                            </div></>) : ""}
                             <div className="control">
-                                <button className="button is-primary is-fullwidth" type="submit">Sign up</button>
+                                <button
+                                    className={`button is-link is-fullwidth ${isRegisterUserPending ? 'is-loading' : ''}`}
+                                    type="submit"
+                                    disabled={((name.length && email.length && password.length && password2.length && (password === password2)) ? false : true)}
+
+                                >Sign up</button>
                             </div>
                         </form>
                     </div>

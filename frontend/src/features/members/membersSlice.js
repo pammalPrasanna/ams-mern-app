@@ -14,32 +14,68 @@ function getTokenConfig(thunkAPI) {
 }
 
 export const deleteMember = createAsyncThunk('members/deleteMember', async (id, thunkAPI) => {
-    const config = getTokenConfig(thunkAPI);
-    const resp = await axios.delete(process.env.REACT_APP_BASE_URI + `api/members/${id}`, config)
-    return resp.data
+    try {
+        const config = getTokenConfig(thunkAPI);
+        const resp = await axios.delete(process.env.REACT_APP_BASE_URI + `api/members/${id}`, config)
+        return resp.data
+    } catch (error) {
+        if (error) {
+            if (error.response.status === 500) {
+                return thunkAPI.rejectWithValue("It's not you, its us. we are working on it, try again later.")
+            }
+            return thunkAPI.rejectWithValue(error.response.data.message)
+        }
+    }
 })
 
 export const getMembers = createAsyncThunk('members/getMembers', async (org_id, thunkAPI) => {
 
-    const config = getTokenConfig(thunkAPI);
-    const resp = await axios.get(process.env.REACT_APP_BASE_URI + `api/orgs/members/${org_id}`, config)
-    return resp.data
+    try {
+        const config = getTokenConfig(thunkAPI);
+        const resp = await axios.get(process.env.REACT_APP_BASE_URI + `api/orgs/members/${org_id}`, config)
+        return resp.data
+    } catch (error) {
+        if (error) {
+            if (error.response.status === 500) {
+                return thunkAPI.rejectWithValue("It's not you, its us. we are working on it, try again later.")
+            }
+            return thunkAPI.rejectWithValue(error.response.data.message)
+        }
+    }
 
 })
 
-export const getOneMember = createAsyncThunk('members/getOneMember', async (mid) => {
-    const resp = await axios.get(process.env.REACT_APP_BASE_URI + `api/members/${mid}`)
+export const getOneMember = createAsyncThunk('members/getOneMember', async (mid, thunkAPI) => {
+    try {
+        const resp = await axios.get(process.env.REACT_APP_BASE_URI + `api/members/${mid}`)
 
-    return resp.data
+        return resp.data
+    } catch (error) {
+        if (error) {
+            if (error.response.status === 500) {
+                return thunkAPI.rejectWithValue("It's not you, its us. we are working on it, try again later.")
+            }
+            return thunkAPI.rejectWithValue(error.response.data.message)
+        }
+    }
 })
 
 
 export const addMember = createAsyncThunk('members/addMember', async (memberData, thunkAPI) => {
 
-    const config = getTokenConfig(thunkAPI);
-    const resp = await axios.post(process.env.REACT_APP_BASE_URI + `api/members/`, memberData, config)
+    try {
+        const config = getTokenConfig(thunkAPI);
+        const resp = await axios.post(process.env.REACT_APP_BASE_URI + `api/members/`, memberData, config)
 
-    return resp.data
+        return resp.data
+    } catch (error) {
+        if (error) {
+            if (error.response.status === 500) {
+                return thunkAPI.rejectWithValue("It's not you, its us. we are working on it, try again later.")
+            }
+            return thunkAPI.rejectWithValue(error.response.data.message)
+        }
+    }
 })
 
 
@@ -67,17 +103,25 @@ const initialMembersState = {
 
     member: {},
 
+    isGetMembersPending: false,
+    isGetMembersRejected: false,
+    isGetMembersFulfilled: false,
+    isGetMembersErrorMsg: "",
+
     isAddMemberPending: false,
     isAddMemberRejected: false,
     isAddMemberFullfilled: false,
+    isAddMemberErrorMsg: "",
 
     isdeleteMemberPending: false,
     isdeleteMemberRejected: false,
     isdeleteMemberFullfilled: false,
+    isDeleteMemeberErrorMsg: "",
 
     isGetOneMemberPending: false,
     isGetOneMemberRejected: false,
     isGetOneMemberFulfilled: false,
+    isGetOneMemberErrorMsg: "",
 
     isRegisterMemberPending: false,
     isRegisterMemberFulfilled: false,
@@ -102,15 +146,21 @@ const membersSlice = createSlice({
     },
     extraReducers: {
         [getMembers.pending]: (state) => {
-            state.isLoading = true;
+            state.isGetMembersPending = true
+            state.isGetMembersRejected = false
+            state.isGetMembersFulfilled = false
+            state.isGetMembersErrorMsg = ""
         },
         [getMembers.fulfilled]: (state, action) => {
+            state.isGetMembersFulfilled = true
             state.members = action.payload
-            state.isLoading = false;
+            state.isGetMembersPending = false;
         },
         [getMembers.rejected]: (state, action) => {
-            state.isLoading = false;
-            state.isError = true;
+            state.isGetMembersPending = false;
+            state.isGetMembersRejected = true;
+            state.isGetMembersErrorMsg = action.payload
+
         },
 
 
@@ -121,11 +171,13 @@ const membersSlice = createSlice({
         [addMember.fulfilled]: (state, action) => {
             state.members.push(action.payload);
             state.isAddMemberPending = false;
-            state.isAddMemberFullfilled = true;
+            toast.success('Member was added successfully');
+
         },
         [addMember.rejected]: (state, action) => {
             state.isAddMemberPending = false;
             state.isAddMemberRejected = true;
+            toast.error('Unable to add member at the moment');
         },
 
 
@@ -144,7 +196,7 @@ const membersSlice = createSlice({
         [deleteMember.rejected]: (state) => {
             state.isdeleteMemberRejected = true
             state.isdeleteMemberPending = false
-            toast.error('Unable to delete the member')
+            toast.error('Unable to delete the member at the moment')
         },
 
 
@@ -159,6 +211,8 @@ const membersSlice = createSlice({
         [getOneMember.rejected]: (state, action) => {
             state.isGetOneMemberRejected = true
             state.isGetOneMemberPending = false
+            state.isGetOneMemberErrorMsg = action.payload
+
         },
 
 

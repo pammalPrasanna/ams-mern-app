@@ -11,7 +11,7 @@ const Member = require('../models/membersModel');
 
 const getAllMembers = asyncHandler(async (req, res) => {
     if (isValidObjectId(req.params.org_id)) {
-        const orgs = await Member.find({ org_id: req.params.org_id }).select("-createdAt -updatedAt").populate({ path: 'mid', select: '-createdAt' });
+        const orgs = await Member.find({ org_id: req.params.org_id }).select("-createdAt -updatedAt").populate({ path: 'mid', select: '-createdAt -password' });
         res.status(200).json(orgs);
     } else {
         res.status(400).json({
