@@ -11,3 +11,8 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.card:hover {
+  transform: scale(102%);
+  border: 1px solid gainsboro;
+}

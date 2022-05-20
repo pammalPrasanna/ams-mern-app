@@ -1,6 +1,16 @@
+import { useEffect } from "react"
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom"
 
-import LoginSignUpButtons from '../components/LoginSignUpButtons';
 export default function LandingPage() {
+    const navigate = useNavigate();
+    const { user } = useSelector((store) => store.auth)
+    useEffect(() => {
+        if (user) {
+            navigate('/dashboard')
+        }
+    }, [user, navigate]);
+
     return (
         <section className="hero is-fullheight is-primary">
             <div className="hero-body">
@@ -10,7 +20,6 @@ export default function LandingPage() {
 
                         <h1 className="title">Attendly</h1>
                     </div>
-                    <LoginSignUpButtons />
                     <div>
                         <h2 className="subtitle">
                             Manage attendance from <strong>anywhere</strong>, in the world.

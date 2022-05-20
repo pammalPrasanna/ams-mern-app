@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { registerUser, resetUserState } from '../features/auth/authSlice'
-import { Box } from 'react-bulma-components'
 import { toast } from 'react-toastify'
 
 
@@ -71,7 +70,7 @@ const RegistrationPage = () => {
             <div className="columns mt-3">
                 <div className='column'></div>
                 <div className='column is-one-quater'>
-                    <Box style={{ margin: 'auto' }}>
+                    <div className="box" style={{ margin: 'auto' }}>
                         <form onSubmit={onSubmit} >
                             <div className="field">
                                 <label className="label">Name</label>
@@ -104,7 +103,7 @@ const RegistrationPage = () => {
                                 <button className="button is-primary is-fullwidth" type="submit">Sign up</button>
                             </div>
                         </form>
-                    </Box>
+                    </div>
                 </div>
                 <div className='column'></div>
 
