@@ -1,9 +1,25 @@
 const asyncHandler = require('express-async-handler');
 const { isValidObjectId } = require('../utils/moongoose.utils');
 const OrgsModel = require('../models/orgsModel');
-const User = require('../models/usersModel');
+const Member = require('../models/membersModel');
 
 
+
+
+
+
+
+const getAllMembers = asyncHandler(async (req, res) => {
+    if (isValidObjectId(req.params.org_id)) {
+        const orgs = await Member.find({ org_id: req.params.org_id }).select("-createdAt -updatedAt").populate({ path: 'mid', select: '-createdAt' });
+        res.status(200).json(orgs);
+    } else {
+        res.status(400).json({
+            message: 'Organization not found'
+        })
+    }
+
+})
 
 // @desc    Get Organizations
 // @route   GET /api/orgs
@@ -99,5 +115,6 @@ module.exports = {
     getAllOrgs,
     createOrg,
     deleteOrg,
-    updateOrg
+    updateOrg,
+    getAllMembers
 }

@@ -18,6 +18,7 @@ const protect = asyncHandler(async (req, res, next) => {
             // check whether the id is manipulated and encoded in jwt
             if (isValidObjectId(decoded.id)) {
                 req.user = await User.findById(decoded.id).select('-password');
+                res.status(500);
                 next();
             } else {
                 res.status(401)

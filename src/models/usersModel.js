@@ -18,9 +18,12 @@ const userSchema = mongoose.Schema({
     role: {
         type: Number,
     },
+    joined_on: {
+        type: Date
+    },
     password: {
         type: String,
-        required: [true, 'Please add password']
+        // required: [true, 'Please add password']
     }
 }, {
     timestamps: true,

@@ -9,8 +9,10 @@ var logger = require('morgan');
 const { errorHandler } = require('./src/middlewares/errorMiddleware');
 const connectDB = require('./src/configs/db');
 
-var usersRouter = require('./src/routes/users.routes');
-var orgsRouter = require('./src/routes/organizations.routes');
+const usersRouter = require('./src/routes/users.routes');
+const orgsRouter = require('./src/routes/organizations.routes');
+const membersRouter = require('./src/routes/member.routes');
+const attendanceRouter = require('./src/routes/attendance.routes');
 
 
 connectDB();
@@ -26,6 +28,8 @@ app.use(cookieParser());
 
 app.use('/api/users', usersRouter);
 app.use('/api/orgs', orgsRouter);
+app.use('/api/members', membersRouter);
+app.use('/api/attendance/', attendanceRouter);
 
 // serve frontend
 
